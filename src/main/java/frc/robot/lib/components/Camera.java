@@ -3,129 +3,98 @@ package frc.robot.lib.components;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Camera
 {
     private NetworkTable table;
     private NetworkTableEntry tx, ty, ta; //x and y angle offset, ta: area of the screen the target takes up
-    public double x,y,area;
-    private final double mountAngle; //Angle the camera is mounted at. DOUBLE CHECK THIS IS ACCURATE
-    private final double heightDiff; //Height from camera to goal. DOUBLE CHECK THIS IS ACCURATE
-    private final double xPos;
+    private final double mountAngle[]; //Angle the camera is mounted at. DOUBLE CHECK THIS IS ACCURATE
+    private final double mountPosition[];
+    private final double horizontalFOV = 27;
+    private final double verticalFOV = 20.5;
     /**
      * Intializes vision
-     * @param mountAngle angle the cmaera is mounted at
-     * @param heightDiff height from camera to goal
+     * @param mountAngle angle of the lens from straight forward
+     * @param mountPosition position of the lens from middle of front
      */
-    public Camera(double mountAngle, double heightDiff, double xPos)
+    public Camera(double mountAngle[], double mountPosition[])
     {
         this.mountAngle = mountAngle;
-        this.heightDiff = heightDiff;
-        this.xPos = xPos;
-        table = NetworkTableInstance.getDefault().getTable("limelight");
+        this.mountPosition = mountPosition;
 
-        tx = table.getEntry("tx");
-        ty = table.getEntry("ty");
-        ta = table.getEntry("ta");
+        this.table = NetworkTableInstance.getDefault().getTable("limelight");
+    }
+
+    /**
+     * update tx, ty, ta
+     */
+    public void update(){
+        this.tx = table.getEntry("tx");
+        this.ty = table.getEntry("ty");
+        this.ta = table.getEntry("ta");
     }
     
     /**
-     * changes modes between teleOP and autonomous for camera
+     * changes modes between teleop and autonomous for camera
      * @param isDriving true - teleop, false - autonomous
      */
     public void setDriverMode(boolean isDriving)
     {
         if(isDriving)
         {
-            table.getEntry("camMode").setNumber(1); // normal camera
-            table.getEntry("ledMode").setNumber(1); // no limelight
+            this.table.getEntry("camMode").setNumber(1); // normal camera
+            this.table.getEntry("ledMode").setNumber(1); // no limelight
         }
         else
         {
-            table.getEntry("camMode").setNumber(0); // low exposure to only see reflection
-            table.getEntry("ledMode").setNumber(3); // limelight
+            this.table.getEntry("camMode").setNumber(0); // low exposure to only see reflection
+            this.table.getEntry("ledMode").setNumber(3); // limelight
         }
     }
 
     /**
-     * primarily for testing
-     * @return double to display x offset angle
+     * @return x and y (left-right and up-down) orientation relative to reflective tape
      */
-    public double getxOffset()
+    public double[] getOrient()
     {
-        return tx.getDouble(0.0);
+        double orient[] = {this.tx.getDouble(0), this.ty.getDouble(0)};
+        return orient;
     }
 
     /**
-     * calculates the distance from the robot to the target (one dimensional vector) Only works on a target at fixed height
+     * @param referenceY height of the reflective tape
+     * @return horizontal distance to reflective tape
      */
-    public double calculateDistance()
+    public double YGetZ(double referenceY)
     {
-        if(ty.getDouble(0.0) <= 0.01)
-        {
-            return 0;
-        }
-        return (heightDiff/Math.tan(Math.toRadians(mountAngle+ty.getDouble(0.0))));
-    }
-    
-    /**
-     * 
-     * @param finalDistance distance from camera to goal
-     * @param errorMargin error margin
-     * @return energy required to reach selected distance
-     */
-    public double getDistanceAdjust(double finalDistance, double errorMargin)
-    {   
-        double distanceAdjust;
-        double kpDistance = 0.01f; //proportional gain for distance
-        double distanceError = calculateDistance() - finalDistance;
-        
-        if (Math.abs(distanceError) <= errorMargin)
-        {
-            distanceAdjust = 0;
-        }
-        else
-        {
-            distanceAdjust = distanceError * kpDistance;
-        }
-
-        SmartDashboard.putNumber("Distance", calculateDistance());
-        SmartDashboard.putNumber("Distance Adjust", distanceAdjust);
-        SmartDashboard.putNumber("Distance Error", distanceError);
-        SmartDashboard.putNumber("Ty", ty.getDouble(0.0));
-        return distanceAdjust;
+        double yDist = referenceY - mountPosition[1];
+        double yOrient = getOrient()[1] + mountAngle[1];
+        return (yDist / Math.tan(Math.toRadians(yOrient)));
+        // opposite ÷ (opposite÷adjacent) = adjacent
     }
 
     /**
-     * @param errorMargin degrees of error tolerated
-     * @return energy required to steer to face the visible target
+     * @param referenceX height of the reflective tape
+     * @return horizontal distance to reflective tape
      */
-    public double getSteeringAdjust(double errorMargin)
+    public double XGetZ(double referenceX)
     {
-        double steeringAdjust = 0.0;
-        double kpSteering = 0.015f;
-        double minCommand = 0.07f; //all speed commands will be no less than this value due to friction, but can make accuracy difficult
-        //-0.02 kP, 0.08f <--- pretty optimal numbers
-        double opp = this.calculateDistance()*Math.tan(tx.getDouble(0.0))+this.xPos;
-        double xError = Math.atan(opp/this.calculateDistance());
+        double xDist = referenceX - mountPosition[0];
+        double xOrient = getOrient()[0] + mountAngle[0];
+        return (xDist / Math.tan(Math.toRadians(xOrient)));
+        // opposite ÷ (opposite÷adjacent) = adjacent
+    }
 
-        //double heading_error = tx.getDouble(0.0);
-        
-        if (xError > errorMargin)
-        {
-            steeringAdjust = kpSteering*xError + minCommand;
-        }
-        else if (xError == 0)
-        {
-            steeringAdjust = 0;
-        }
-        else if (xError < errorMargin)
-        {
-            steeringAdjust = kpSteering*xError - minCommand;
-        }
-
-        return steeringAdjust;
+    /**
+     * @param unit area of reflection from unit distance in percentage of image
+     * @return number of units in distance
+     */
+    public double AGetZ(double unit)
+    {
+        double avgFOV = Math.sqrt(this.horizontalFOV*this.verticalFOV);
+        double unitAngle = Math.sqrt(unit)*avgFOV;
+        double reflAngle = Math.sqrt(this.ta.getDouble(0.0))*avgFOV;
+        return Math.tan(unitAngle)/Math.tan(reflAngle);
     }
 }

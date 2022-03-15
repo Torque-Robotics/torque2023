@@ -8,15 +8,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import frc.robot.lib.components.Camera; 
-import frc.robot.lib.components.DriveTrain;
-import frc.robot.game2022.modules.Arm;
-import frc.robot.game2022.modules.Combine;
-import frc.robot.game2022.tasks.AutoTask;
-import frc.robot.game2022.tasks.DriverTask;
-import frc.robot.game2022.tasks.SecondaryTask;
 
 
 /**
@@ -27,25 +18,13 @@ import frc.robot.game2022.tasks.SecondaryTask;
  * project.
  */
 public class Robot extends TimedRobot {
-  DriverTask driver;
-  SecondaryTask secondary;
-  AutoTask auto;
-  DriveTrain driveTrain;
-  Camera camera;
-  Arm arm = new Arm();
-  Combine combine = new Combine();
-
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
-    camera = new Camera(69, 95, 12);
-    driveTrain = new DriveTrain();
-    driver = new DriverTask(0, driveTrain, camera);
-    secondary = new SecondaryTask(1, arm, combine);
-    auto = new AutoTask(driveTrain, camera, combine);
+
   }
 
   /**
@@ -75,21 +54,19 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    camera.setDriverMode(true);
-    auto.setPhase(4);
+
   }
   /**
    * This function is called periodically during autonomous.
    */
   @Override
   public void autonomousPeriodic() {
-    auto.loop();
-    SmartDashboard.putNumber("X offset", camera.getxOffset());
+
   }
   @Override
 	public void teleopInit() 
 	{
-    camera.setDriverMode(true);
+
 	}
   /**
    * This function is called periodically during operator control.
@@ -97,8 +74,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    driver.teleop();    
-    secondary.teleop();
+
   }
   /**
    * This function is called periodically during test mode.
@@ -116,6 +92,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledPeriodic()
 	{
-    driveTrain.drivePercentageOutput(0, 0);
+
 	}
 }

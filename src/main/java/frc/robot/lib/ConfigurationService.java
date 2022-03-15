@@ -9,10 +9,10 @@ public class ConfigurationService
 {
    
     //TALON/VICTOR PORT INTEGERS
-    public static final int DRIVETRAIN_LEFT_MASTER    = 1; //1
-    public static final int DRIVETRAIN_LEFT_SLAVE     = 0; //0
-    public static final int DRIVETRAIN_RIGHT_MASTER   = 2; //2
-    public static final int DRIVETRAIN_RIGHT_SLAVE    = 3; //3
+    public static final int DRIVETRAIN_LEFT_LEADER    = 1; //1
+    public static final int DRIVETRAIN_LEFT_FOLLOWER  = 0; //0
+    public static final int DRIVETRAIN_RIGHT_LEADER   = 2; //2
+    public static final int DRIVETRAIN_RIGHT_FOLLOWER = 3; //3
     
     //TALON Port Integers for Modules (2022)
     public static final int ARM_LOWER                 = 15; //15, originally 4
