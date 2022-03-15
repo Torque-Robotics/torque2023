@@ -30,19 +30,13 @@ public class DriveTrain
         LeftSlave = new WPI_TalonSRX(ConfigurationService.DRIVETRAIN_LEFT_FOLLOWER);
         RightSlave = new WPI_TalonSRX(ConfigurationService.DRIVETRAIN_RIGHT_FOLLOWER);
 
-        this.resetTalons();
-
-        LeftMaster.setNeutralMode(NeutralMode.Coast);
-        RightMaster.setNeutralMode(NeutralMode.Coast);
-
-        LeftSlave.setNeutralMode(NeutralMode.Coast);
-        RightSlave.setNeutralMode(NeutralMode.Coast);
+        this.configTalons();
     }
 
     /**
      * Configures talons of the DriveTrain with 2 motors on each side in a Master-Follower config.
      */
-    public void resetTalons() 
+    public void configTalons() 
     {
         /** 
          * Notes: -Use [motor.configContinuousCurrentLimit(value)] if we're ever worried about the 
@@ -53,6 +47,12 @@ public class DriveTrain
          */
         LeftSlave.set(ControlMode.Follower, LeftMaster.getDeviceID());
         RightSlave.set(ControlMode.Follower, RightMaster.getDeviceID());
+
+        LeftMaster.setNeutralMode(NeutralMode.Coast);
+        RightMaster.setNeutralMode(NeutralMode.Coast);
+
+        LeftSlave.setNeutralMode(NeutralMode.Coast);
+        RightSlave.setNeutralMode(NeutralMode.Coast);
     }
 
     /** 
