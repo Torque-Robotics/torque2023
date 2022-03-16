@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;//Mainly for debugging
-import frc.robot.lib.ConfigurationService;
+import frc.robot.lib.Config;
 
 
 
@@ -25,10 +25,10 @@ public class DriveTrain
      */
     public DriveTrain() 
     {
-        LeftMaster = new WPI_TalonSRX(ConfigurationService.DRIVETRAIN_LEFT_LEADER);
-        RightMaster = new WPI_TalonSRX(ConfigurationService.DRIVETRAIN_RIGHT_LEADER);
-        LeftSlave = new WPI_TalonSRX(ConfigurationService.DRIVETRAIN_LEFT_FOLLOWER);
-        RightSlave = new WPI_TalonSRX(ConfigurationService.DRIVETRAIN_RIGHT_FOLLOWER);
+        LeftMaster = new WPI_TalonSRX(Config.DRIVETRAIN_LEFT_LEADER);
+        RightMaster = new WPI_TalonSRX(Config.DRIVETRAIN_RIGHT_LEADER);
+        LeftSlave = new WPI_TalonSRX(Config.DRIVETRAIN_LEFT_FOLLOWER);
+        RightSlave = new WPI_TalonSRX(Config.DRIVETRAIN_RIGHT_FOLLOWER);
 
         this.configTalons();
     }

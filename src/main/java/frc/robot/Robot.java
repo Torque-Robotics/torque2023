@@ -8,7 +8,16 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import frc.robot.lib.Config;
 
+import frc.robot.lib.components.DriveTrain;
+import frc.robot.game2023.modules.Climber;
+import frc.robot.game2023.modules.Combine;
+
+import frc.robot.lib.tools.Camera;
+
+import frc.robot.game2023.tasks.Auto;
+import frc.robot.game2023.tasks.Tele;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -18,13 +27,32 @@ import edu.wpi.first.wpilibj.TimedRobot;
  * project.
  */
 public class Robot extends TimedRobot {
+  private DriveTrain driveTrain;
+  private Climber climber;
+  private Combine combine;
+
+  private Camera camera;
+
+  private final double cameraPosition[] = {0,0,0};
+  private final double cameraAngle[] = {0,0,0};
+
+  private Auto auto;
+  private Tele tele;
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
    */
   @Override
   public void robotInit() {
+    this.driveTrain = new DriveTrain();
+    this.climber = new Climber(Config.CLIMB_ARM, Config.CLIMB_HAND);
+    this.combine = new Combine(Config.COMBINE_ARM, Config.COMBINE_HAND);
 
+    this.camera = new Camera(this.cameraPosition,this.cameraAngle);
+
+    this.auto = new Auto(driveTrain, camera, combine);
+    this.tele = new Tele(driveTrain, camera, climber, combine);
   }
 
   /**
@@ -54,19 +82,19 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-
+    this.auto.init();
   }
   /**
    * This function is called periodically during autonomous.
    */
   @Override
   public void autonomousPeriodic() {
-
+    this.auto.loop();
   }
   @Override
 	public void teleopInit() 
 	{
-
+    this.tele.init();
 	}
   /**
    * This function is called periodically during operator control.
@@ -74,7 +102,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
+    this.auto.loop();
   }
   /**
    * This function is called periodically during test mode.

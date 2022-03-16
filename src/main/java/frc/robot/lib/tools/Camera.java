@@ -18,10 +18,10 @@ public class Camera
      * @param mountAngle angle of the lens from straight forward
      * @param mountPosition position of the lens from middle of front
      */
-    public Camera(double mountAngle[], double mountPosition[])
+    public Camera(double mountPosition[], double mountAngle[])
     {
-        this.mountAngle = mountAngle;
         this.mountPosition = mountPosition;
+        this.mountAngle = mountAngle;
 
         this.table = NetworkTableInstance.getDefault().getTable("limelight");
     }

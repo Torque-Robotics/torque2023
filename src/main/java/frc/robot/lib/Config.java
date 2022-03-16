@@ -5,7 +5,7 @@ package frc.robot.lib;
  * I expect to put values like ports, powers, limits, and thresholds in here.
  * @author Jaxon A Brown
  */
-public class ConfigurationService
+public class Config
 {
    
     //TALON/VICTOR PORT INTEGERS
@@ -14,11 +14,11 @@ public class ConfigurationService
     public static final int DRIVETRAIN_RIGHT_LEADER   = 2; //2
     public static final int DRIVETRAIN_RIGHT_FOLLOWER = 3; //3
     
-    //TALON Port Integers for Modules (2022)
-    public static final int ARM_LOWER                 = 15; //15, originally 4
-    public static final int ARM_UPPER                 = 14; //14, originally 5
-    public static final int COMBINE_INTAKE            = 13; //13, originally 6
-    public static final int COMBINE_LIFT              = 12; //12, originally 7
+    //TALON Port Integers for Modules
+    public static final int CLIMB_ARM                 = 15; //15, originally 4
+    public static final int CLIMB_HAND                = 14; //14, originally 5
+    public static final int COMBINE_ARM               = 12; //12, originally 7
+    public static final int COMBINE_HAND              = 13; //13, originally 6
 
     //Sensors
     public static final int ULTRASONIC_PORT           = 0; 

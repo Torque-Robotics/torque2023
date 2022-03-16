@@ -2,7 +2,7 @@ package frc.robot.lib.components;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.lib.ConfigurationService;
+import frc.robot.lib.Config;
 
 /**
  * Created by Nick Sloss on 1/13/18.
@@ -53,7 +53,7 @@ public class Xbox
 
     public boolean getAxisActive(int axisPort)
     {
-        return (wpiJoystick.getRawAxis(axisPort) >= ConfigurationService.JOYSTICK_DEADZONE) ? true : false;
+        return (wpiJoystick.getRawAxis(axisPort) >= Config.JOYSTICK_DEADZONE) ? true : false;
     }
 
 

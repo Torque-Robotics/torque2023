@@ -3,13 +3,14 @@ package frc.robot.game2023.modules;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import frc.robot.lib.Config;
 
-public class Climb {
+public class Climber {
     private final WPI_TalonSRX arm;
     private final WPI_TalonSRX hand;
-    public Climb(WPI_TalonSRX arm, WPI_TalonSRX hand){
-        this.arm = arm;
-        this.hand = hand;
+    public Climber(int arm, int hand){
+        this.arm = new WPI_TalonSRX(arm);
+        this.hand = new WPI_TalonSRX(hand);
         this.arm.setNeutralMode(NeutralMode.Brake);
         this.arm.setNeutralMode(NeutralMode.Brake);
     }
