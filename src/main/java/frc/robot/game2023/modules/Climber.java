@@ -3,7 +3,6 @@ package frc.robot.game2023.modules;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import frc.robot.lib.Config;
 
 public class Climber {
     private final WPI_TalonSRX arm;
