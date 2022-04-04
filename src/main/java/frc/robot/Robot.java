@@ -13,7 +13,7 @@ import frc.robot.lib.Config;
 import frc.robot.lib.components.DriveTrain;
 import frc.robot.game2023.modules.Climber;
 import frc.robot.game2023.modules.Combine;
-
+import frc.robot.lib.components.Xbox;
 import frc.robot.lib.tools.Camera;
 
 import frc.robot.game2023.tasks.Auto;
@@ -31,6 +31,8 @@ public class Robot extends TimedRobot {
   private Climber climber;
   private Combine combine;
 
+  private Xbox xbox;
+  
   private Camera camera;
 
   private final double cameraPosition[] = {0,0,0};
@@ -49,10 +51,12 @@ public class Robot extends TimedRobot {
     this.climber = new Climber(Config.CLIMB_ARM, Config.CLIMB_HAND);
     this.combine = new Combine(Config.COMBINE_ARM, Config.COMBINE_HAND);
 
+    this.xbox = new Xbox(1);
+
     this.camera = new Camera(this.cameraPosition,this.cameraAngle);
 
     this.auto = new Auto(driveTrain, camera, combine);
-    this.tele = new Tele(driveTrain, camera, climber, combine);
+    this.tele = new Tele(driveTrain, camera, climber, combine, xbox);
   }
 
   /**
